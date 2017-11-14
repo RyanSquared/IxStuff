@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{% block title %}{{ config.appname }}{% endblock %}</title>
+    <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script defer>
+      window.mdc.autoInit();
+    </script>
+    <style>
+      html {
+        height: 100%;
+      }
+      .ixstates-content {
+        display: flex;
+        flex: 1 1 auto;
+        height: 100%;
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0px;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        min-height: 100%;
+      }
+      .app-main {
+        width: 100%;
+        background-color: #eee;
+      }
+      .mdc-text-field {
+        width: 100%;
+      }
+      .mdc-card {
+        background-color: white;
+      }
+    </style>
+  </head>
+  <body class="mdc-typography">
+    <header class="mdc-toolbar mdc-toolbar-fixed">
+      <div class="mdc-toolbar__row">
+        <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
+          <span class="mdc-toolbar__title">
+            {%- block appname %}{{ config.appname }}{% endblock -%}
+            {%- if session.user %} // {{ session.user }}{% endif -%}
+          </span>
+        </section>
+        <section class="mdc-toolbar__section mdc-toolbar__section--align-end" role="toolbar">
+          <!-- ::TODO:: stuff? -->
+        </section>
+      </div>
+    </header>
+    <div class="ixstates-content">
+      <nav class="mdc-permanent-drawer">
+        <div class="mdc-list-group">
+          <nav class="mdc-list">
+            <a class="mdc-list-item mdc-permanent-drawer--selected" href="/">
+              <i class="material-icons mdc-list-item__start-detail" aria-hidden="true"></i>Index
+            </a>
+            <a class="mdc-list-item" href="/mail">
+              <i class="material-icons mdc-list-item__start-detail" aria-hidden="true">email</i>Mail
+            </a>
+          </nav>
+
+          <!--hr class="mdc-list-divider">
+
+          <nav class="mdc-list">
+          </nav-->
+        </div>
+      </nav>
+      <main class="app-main">
+        <div class="mdc-layout-grid">
+          <div class="mdc-layout-grid__inner">
+            <div class="mdc-layout-grid__cell--span-8">
+              <div class="mdc-card ixstates-card">
+                <section class="mdc-card__primary">
+                  <h1 class="mdc-card__title mdc-card__title--large">Title goes here</h1>
+                  <h2 class="mdc-card__subtitle">Subtitle here</h2>
+                </section>
+                <section class="mdc-card__supporting-text">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </section>
+              </div>
+            </div>
+            <div class="mdc-layout-grid__cell--span-4">
+              <!-- ::TODO:: un-hardcode login -->
+              <form class="mdc-card ixstates-card" method="post"
+                action="{{ url_for('api.user_management.handler') }}">
+                <section class="mdc-card__primary">
+                  <h1 class="mdc-card__title mdc-card__title--large">Log In / Register</h1>
+                  {% if session.user -%}
+                    <h2 class="mdc-card__subtitle">You are already logged in as {{ session.user }}</h2>
+                  {%- endif %}
+                </section>
+                <section class="mdc-card__supporting-text">
+                  <div class="mdc-text-field">
+                    <input type="text" id="username" class="mdc-text-field__input" name="username">
+                    <label class="mdc-text-field__label" for="username">Username</label>
+                    <div class="mdc-text-field__bottom-line"></div>
+                  </div>
+                  <div class="mdc-text-field">
+                    <input id="password" class="mdc-text-field__input" name="password"
+                      required pattern=".{8,}" type="password" aria-controls="password-verify-msg">
+                    <label class="mdc-text-field__label" for="password">Password</label>
+                    <div class="mdc-text-field__bottom-line"></div>
+                  </div>
+                  <p class="mdc-text-field-helptext mdc-text-field-helptext--persistent mdc-text-field-helptext--validation-msg"
+                    id="password-verify-msg">Password must be at least eight characters</p>
+                </section>
+                <section class="mdc-card__actions">
+                  <button name="login" type="submit"
+                    class="mdc-ripple-surface mdc-button mdc-button--compact mdc-card__action">Login</button>
+                  <button name="register" type="submit"
+                    class="mdc-ripple-surface mdc-button mdc-button--compact mdc-card__action">Register</button>
+                </section>
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    <div class="mdc-snackbar"
+      id="messages"
+      aria-live="assertive"
+      aria-atomic="true"
+      aria-hidden="true">
+      <div class="mdc-snackbar__text"></div>
+      <div class="mdc-snackbar__action-wrapper">
+        <button type="button" class="mdc-snackbar__action-button"></button>
+      </div>
+    </div>
+    <script>
+      var MDCSnackbar = window.mdc.snackbar.MDCSnackbar;
+      var snackbar = new MDCSnackbar(document.getElementById('messages'));
+      $(document).ready(()=> {
+        $.ajax('{{ url_for('api.messages.get_messages') }}').done((data)=> {
+					for (message of data)
+            snackbar.show({
+              message: message,
+              timeout: 2750
+            });
+				});
+        $(".mdc-text-field").each((_, element)=> {
+          mdc.textField.MDCTextField.attachTo(element);
+        });
+        $(".mdc-ripple-surface").each((_, element)=> {
+          mdc.ripple.MDCRipple.attachTo(element);
+        });
+        $("form button[type=submit]").each((_, element)=> {
+          element.onclick = function() { // bind `this`
+            var form = $(this).parents('form');
+            form.submit((event)=> {
+              form.append($("<input>")
+                .attr("type", "hidden")
+                .val(element.name))
+            });
+          };
+        });
+      });
+    </script>
+  </body>
+</html>
