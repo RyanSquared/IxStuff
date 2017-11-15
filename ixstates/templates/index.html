@@ -1,1 +1,19 @@
 {% extends "base.html" %}
+
+{% block app %}
+{%- for post in announcements %}
+<div class="mdc-card">
+  <section class="mdc-card__primary">
+    <h1 class="mdc-card__title mdc-card__title--large">{{ post.title }}</h1>
+    <h2 class="mdc-card__subtitle">
+      {{ post.username }} // {{ post.date }}
+    </h2>
+  </section>
+  <section class="mdc-card__supporting-text">
+    {% autoescape false -%}
+    {{ post.content | render_markdown }}
+    {%- endautoescape %}
+  </section>
+</div>
+{% endfor -%}
+{% endblock %}
