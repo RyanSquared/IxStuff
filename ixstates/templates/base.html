@@ -25,8 +25,7 @@
         margin: 0px;
         display: flex;
         flex-direction: column;
-        padding: 0;
-        margin: 0;
+        padding: 0px;
         box-sizing: border-box;
         min-height: 100%;
       }
@@ -37,8 +36,15 @@
       .mdc-text-field {
         width: 100%;
       }
+      .mdc-card-container .mdc-card {
+        margin-bottom: 24px;
+      }
+      .mdc-card-container .mdc-card:last-child {
+        margin-bottom: 0px;
+      }
       .mdc-card {
         background-color: white;
+        text-align: justify;
       }
     </style>
   </head>
@@ -77,21 +83,13 @@
       <main class="app-main">
         <div class="mdc-layout-grid">
           <div class="mdc-layout-grid__inner">
-            <div class="mdc-layout-grid__cell--span-8">
-              <div class="mdc-card ixstates-card">
-                <section class="mdc-card__primary">
-                  <h1 class="mdc-card__title mdc-card__title--large">Title goes here</h1>
-                  <h2 class="mdc-card__subtitle">Subtitle here</h2>
-                </section>
-                <section class="mdc-card__supporting-text">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                </section>
-              </div>
+            <div class="mdc-layout-grid__cell--span-8 mdc-card-container">
+              {% block app -%}
+              {%- endblock %}
             </div>
-            <div class="mdc-layout-grid__cell--span-4">
+            <div class="mdc-layout-grid__cell--span-4 mdc-card-container">
               <!-- ::TODO:: un-hardcode login -->
-              <form class="mdc-card ixstates-card" method="post"
+              <form class="mdc-card" method="post"
                 action="{{ url_for('api.user_management.handler') }}">
                 <section class="mdc-card__primary">
                   <h1 class="mdc-card__title mdc-card__title--large">Log In / Register</h1>
