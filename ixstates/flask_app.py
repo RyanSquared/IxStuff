@@ -8,7 +8,7 @@ from cachetools import func as functools
 
 app = flask.Flask(__name__)  # pylint: disable=invalid-name
 app.config['appname'] = "IxStates"
-with open("/dev/random") as f:
+with open("/dev/random", "rb") as f:
     app.secret_key = f.read(24)
 
 app.register_blueprint(ixstates.ui.index.blueprint)
