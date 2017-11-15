@@ -43,7 +43,7 @@ def querySQL(query, args=None):  # pylint: disable=invalid-name
     cursor = DB_CON.cursor()
     cursor.execute(query, args)
     fields = [x[0] for x in cursor.description]
-    return ({fields[i]: v for i, v in enumerate(cursor)})
+    return ({fields[i]: v for i, v in enumerate(row)} for row in cursor)
 
 
 executeSQL("""
