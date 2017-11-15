@@ -1,6 +1,9 @@
 "Utility library for IxStates."
 from datetime import datetime, date, timedelta
-import itertools
+try:
+    import itertools.izip as zip  # pylint: disable=redefined-builtin
+except ImportError:  # We're in Py 3
+    pass
 import sqlite3
 import flask
 
@@ -44,7 +47,7 @@ def querySQL(query, args=None):  # pylint: disable=invalid-name
     cursor = DB_CON.cursor()
     cursor.execute(query, args)
     fields = [x[0] for x in cursor.description]
-    return (dict(itertools.izip(fields, row)) for row in cursor)
+    return (dict(zip(fields, row)) for row in cursor)
 
 
 executeSQL("""
