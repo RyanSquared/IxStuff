@@ -51,12 +51,13 @@ CREATE TABLE IF NOT EXISTS users (
     uid INTEGER PRIMARY KEY AUTOINCREMENT,
     username VARCHAR NOT NULL,
     password VARCHAR NOT NULL,
+    admin TINYINT,
     UNIQUE(username)
 );""")
 
 executeSQL("""
-INSERT INTO users (username, password) VALUES ('RyanSquared',
-'$2b$12$bGLD75o2VfH4/YbaR/NSNuolyzS1Rfukcw80P7Xhj2ygDS0HyxUcy');""")
+INSERT INTO users (username, password, admin) VALUES ('RyanSquared',
+'$2b$12$bGLD75o2VfH4/YbaR/NSNuolyzS1Rfukcw80P7Xhj2ygDS0HyxUcy', 1);""")
 
 executeSQL("""
 CREATE TABLE IF NOT EXISTS announcements (
