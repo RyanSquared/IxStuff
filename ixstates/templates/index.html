@@ -6,7 +6,11 @@
   <section class="mdc-card__primary">
     <h1 class="mdc-card__title mdc-card__title--large">{{ post.title }}</h1>
     <h2 class="mdc-card__subtitle">
-      {{ post.username }} // {{ post.date }}
+      {%- if post.admin -%}
+        <span style="color: red;">{{ post.username }}</span>
+      {%- else -%}
+        {{ post.username }}
+      {%- endif %} // {{ post.date -}}
     </h2>
   </section>
   <section class="mdc-card__supporting-text">
