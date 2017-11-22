@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width" />
     <title>{% block title %}{{ config.appname }}{% endblock %}</title>
     <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
-		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script defer>
@@ -98,12 +98,12 @@
                   {%- endif %}
                 </section>
                 <section class="mdc-card__supporting-text">
-                  <div class="mdc-text-field">
+                  <div class="mdc-text-field mdc-text-field--upgraded">
                     <input type="text" id="username" class="mdc-text-field__input" name="username">
                     <label class="mdc-text-field__label" for="username">Username</label>
                     <div class="mdc-text-field__bottom-line"></div>
                   </div>
-                  <div class="mdc-text-field">
+                  <div class="mdc-text-field mdc-text-field--upgraded">
                     <input id="password" class="mdc-text-field__input" name="password"
                       required pattern=".{8,}" type="password" aria-controls="password-verify-msg">
                     <label class="mdc-text-field__label" for="password">Password</label>
