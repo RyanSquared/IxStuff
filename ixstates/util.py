@@ -2,7 +2,12 @@
 from datetime import datetime, date, timedelta
 import sqlite3
 import flask
+import htmlmin
 
+minifier = htmlmin.Minifier(  # pylint: disable=invalid-name
+    remove_comments=True,
+    remove_empty_space=True,
+    remove_all_empty_space=True)
 DB_CON = sqlite3.connect(":memory:", check_same_thread=False)
 
 
@@ -25,7 +30,7 @@ def redirect(url):
 def render_template(url, template, **kwargs):
     "Set a session URL variable and render a template."
     flask.session['url'] = url
-    return flask.render_template(template, **kwargs)
+    return minifier.minify(flask.render_template(template, **kwargs))
 
 
 def executeSQL(query, args=None):  # pylint: disable=invalid-name
