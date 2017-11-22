@@ -6,9 +6,6 @@
     <title>{% block title %}{{ config.appname }}{% endblock %}</title>
     <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <script defer>
-      window.mdc.autoInit();
-    </script>
     <style>
       html {
         height: 100%;
@@ -133,6 +130,7 @@
       var MDCSnackbar = window.mdc.snackbar.MDCSnackbar;
       var snackbar = new MDCSnackbar(document.getElementById('messages'));
       $(document).ready(()=> {
+        window.mdc.autoInit();
         $.ajax('{{ url_for('api.messages.get_messages') }}').done((data)=> {
 					for (message of data)
             snackbar.show({
