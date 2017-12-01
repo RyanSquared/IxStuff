@@ -90,4 +90,7 @@ So far, here's the battle plan:
 These steps will take a bit of time, so we at IxStaff hope no one minds as
 the nation undergoes our reimagining efforts. If you'd like to help or get
 more information about the rebranding and about the plans for IxStates,
-feel free to join us on IRC."""))
+feel free to join us on IRC.
+
+Do you have an idea that can Make Ixnay Great Again? Feel free to send any
+requests to **LordRyan** on the Ixnay IRC channel."""))
