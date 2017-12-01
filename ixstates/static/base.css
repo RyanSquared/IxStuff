@@ -1,0 +1,34 @@
+html {
+  height: 100%;
+}
+.ixstates-content {
+  display: flex;
+  flex: 1 1 auto;
+  height: 100%;
+  box-sizing: border-box;
+}
+body {
+  margin: 0px;
+  display: flex;
+  flex-direction: column;
+  padding: 0px;
+  box-sizing: border-box;
+  min-height: 100%;
+}
+.app-main {
+  width: 100%;
+  background-color: #eee;
+}
+.mdc-text-field {
+  width: 100%;
+}
+.mdc-card-container .mdc-card {
+  margin-bottom: 24px;
+}
+.mdc-card-container .mdc-card:last-child {
+  margin-bottom: 0px;
+}
+.mdc-card {
+  background-color: white;
+  text-align: justify;
+}
