@@ -5,48 +5,13 @@
     <meta name="viewport" content="width=device-width" />
     <title>{% block title %}{{ config.appname }}{% endblock %}</title>
     <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
-		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="{{ static_link('base.css') }}">
     <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script defer>
       window.mdc.autoInit();
     </script>
-    <style>
-      html {
-        height: 100%;
-      }
-      .ixstates-content {
-        display: flex;
-        flex: 1 1 auto;
-        height: 100%;
-        box-sizing: border-box;
-      }
-      body {
-        margin: 0px;
-        display: flex;
-        flex-direction: column;
-        padding: 0px;
-        box-sizing: border-box;
-        min-height: 100%;
-      }
-      .app-main {
-        width: 100%;
-        background-color: #eee;
-      }
-      .mdc-text-field {
-        width: 100%;
-      }
-      .mdc-card-container .mdc-card {
-        margin-bottom: 24px;
-      }
-      .mdc-card-container .mdc-card:last-child {
-        margin-bottom: 0px;
-      }
-      .mdc-card {
-        background-color: white;
-        text-align: justify;
-      }
-    </style>
   </head>
   <body class="mdc-typography">
     <header class="mdc-toolbar mdc-toolbar-fixed">
