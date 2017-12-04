@@ -43,15 +43,25 @@ def static_link(filename, _as=None):
     "Add a static link and append a header for preloading"
     if _as is None:
         _as = auto_translations[filename.rpartition('.')[2]]
-    flask.g.links.append((filename, _as))
-    return flask.url_for('static', filename=filename)
+    filepath = flask.url_for('static', filename=filename)
+    flask.g.links.append((filepath, _as))
+    return filepath
+
+
+@app.template_global('cors_link')
+def cors_link(url, _as=None):
+    "Add a CORS link and append a header for preloading"
+    if _as is None:
+        _as = auto_translations[url.rpartition('.')[2]]
+    flask.g.links.append((url, _as))
+    return url
 
 
 @app.after_request
 def process_links(response):
     "Create headers for preloading and attach to the response"
     for link in flask.g.links:
-        url = flask.url_for('static', filename=link[0])
+        uri = link[0]
         _as = link[1]
         if link[1] == "font":
             # Must append crossorigin flag
@@ -59,5 +69,5 @@ def process_links(response):
         else:
             header_post = ""
         response.headers.add(
-            'Link', "<{}>;rel=preload;as={}".format(url, _as) + header_post)
+            'Link', "<{}>;rel=preload;as={}".format(uri, _as) + header_post)
     return response
