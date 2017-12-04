@@ -7,4 +7,4 @@ setup(
     packages=['ixstates', 'ixstates.ui', 'ixstates.api'],
     install_requires=['bcrypt', 'flask', 'cachetools', 'markdown', 'tornado',
                       'htmlmin'],
-    package_data={'ixstates': ['templates/*.html']})
+    package_data={'ixstates': ['templates/*.html', 'static/*']})
