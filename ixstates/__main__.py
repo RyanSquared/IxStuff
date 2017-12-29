@@ -17,7 +17,7 @@ def is_socket_addr(address):
             socket.inet_pton(socket.AF_INET6, address)
         except socket.error:
             raise argparse.ArgumentTypeError(
-                "%s is not a valid host address" % repr(address))
+                "Not a valid host address", address)
     return address
 
 
