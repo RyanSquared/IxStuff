@@ -10,9 +10,8 @@
     <script src="{{ cors_link('https://code.jquery.com/jquery-3.2.1.min.js') }}"></script>
 
     <link rel="stylesheet" href="{{ static_link('base.css') }}">
-    <script defer>
-      window.mdc.autoInit();
-    </script>
+    {% block head %}
+    {% endblock %}
   </head>
 
   <body class="mdc-typography">
@@ -25,7 +24,7 @@
           </span>
         </section>
         <section class="mdc-toolbar__section mdc-toolbar__section--align-end" role="toolbar">
-          <!-- ::TODO:: stuff? -->
+          <!-- ::TODO:: add stuff? -->
         </section>
       </div>
     </header>
@@ -33,13 +32,25 @@
     <div class="ixstates-content">
       <nav class="mdc-permanent-drawer">
         <div class="mdc-list-group">
+          {% macro render_icon(href, icon, name) -%}
+            {% if href == request.path -%}
+            <a class="mdc-list-item mdc-permanent-drawer--selected mdc-ripple-surface" href="{{ href }}">
+              <i class="material-icons mdc-list-item__start-detail" aria-hidden="true">{{ icon }}</i>{{ name }}
+            </a>
+            {%- else -%}
+            <a class="mdc-list-item mdc-ripple-surface" href="{{ href }}">
+              <i class="material-icons mdc-list-item__start-detail" aria-hidden="true">{{ icon }}</i>{{ name }}
+            </a>
+            {%- endif %}
+          {%- endmacro %}
           <nav class="mdc-list">
-            <a class="mdc-list-item mdc-permanent-drawer--selected mdc-ripple-surface" href="/">
-              <i class="material-icons mdc-list-item__start-detail" aria-hidden="true"></i>Index
-            </a>
-            <a class="mdc-list-item mdc-ripple-surface" href="/mail">
-              <i class="material-icons mdc-list-item__start-detail" aria-hidden="true">email</i>Mail
-            </a>
+            {{ render_icon("/", "home", "Index") }}
+            {%- if session.get("uid") %}
+            {%- if session.admin %}
+            {{ render_icon("/admin/", "assignment", "Admin") }}
+            {%- endif %}
+            {{ render_icon("/mail/", "email", "Mail") }}
+            {%- endif %}
           </nav>
         </div>
       </nav>
@@ -47,12 +58,13 @@
       <main class="app-main">
         <div class="mdc-layout-grid">
           <div class="mdc-layout-grid__inner">
+            {% block main_cell -%}
             <div class="mdc-layout-grid__cell--span-8 mdc-card-container">
               {% block app -%}
               {%- endblock %}
             </div>
+            {%- endblock %}
             <div class="mdc-layout-grid__cell--span-4 mdc-card-container">
-              <!-- ::TODO:: un-hardcode login -->
               <form class="mdc-card" method="post"
                 action="{{ url_for('api.user_management.handler') }}">
                 <section class="mdc-card__primary">
@@ -64,13 +76,14 @@
                 <section class="mdc-card__supporting-text">
                   <div class="mdc-text-field mdc-text-field--upgraded">
                     <input type="text" id="username" class="mdc-text-field__input" name="username">
-                    <label class="mdc-text-field__label" for="username">Username</label>
+                    <label class="mdc-text-field__label mdc-text-field__label--float-above" for="username">Username</label>
                     <div class="mdc-text-field__bottom-line"></div>
                   </div>
                   <div class="mdc-text-field mdc-text-field--upgraded">
                     <input id="password" class="mdc-text-field__input" name="password"
+                      {% if session.uid is not none %}autocomplete="off"{% else %}autocomplete="on"{% endif %}
                       required pattern=".{8,}" type="password" aria-controls="password-verify-msg">
-                    <label class="mdc-text-field__label" for="password">Password</label>
+                    <label class="mdc-text-field__label mdc-text-field__label--float-above" for="password">Password</label>
                     <div class="mdc-text-field__bottom-line"></div>
                   </div>
                   <p class="mdc-text-field-helptext mdc-text-field-helptext--persistent mdc-text-field-helptext--validation-msg"
@@ -83,6 +96,8 @@
                     class="mdc-ripple-surface mdc-button mdc-button--compact mdc-card__action">Register</button>
                 </section>
               </form>
+              {% block sidebar %}
+              {% endblock %}
             </div>
           </div>
         </div>
@@ -110,7 +125,7 @@
 					for (message of data)
             snackbar.show({
               message: message,
-              timeout: 2750
+              timeout: 2750,
             });
 				});
         $(".mdc-text-field").each((_, element)=> {
@@ -118,6 +133,9 @@
         });
         $(".mdc-ripple-surface").each((_, element)=> {
           mdc.ripple.MDCRipple.attachTo(element);
+        });
+        $(".mdc-radio").each((_, element)=> {
+          mdc.radio.MDCRadio.attachTo(element);
         });
         $("form button[type=submit]").each((_, element)=> {
           element.onclick = function() { // bind `this`
@@ -130,6 +148,9 @@
           };
         });
       });
+    </script>
+    <script>
+      window.mdc.autoInit();
     </script>
   </body>
 </html>
