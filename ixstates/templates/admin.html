@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block main_cell %}
+<div class="mdc-layout-grid__cell--span-4 mdc-card-container">
+  <div class="mdc-card">
+    <section class="mdc-card__primary">
+      <h1 class="mdc-card__title mdc-card__title--large">Admin Panel</h1>
+      <h2 class="mdc-card__subtitle">Edit Settings for IxStates</h2>
+    </section>
+    <section class="mdc-card__supporting-text">
+      Hello World
+    </section>
+  </div>
+  <!--- ::TODO:: don't hardcode this part lol --->
+  <ul class="mdc-list mdc-card">
+    <li class="mdc-list-item mdc-typography--title">Lorewards</li>
+    <li class="mdc-list-item mdc-ripple-surface">December 2017</li>
+    <li class="mdc-list-item mdc-ripple-surface">November 2017</li>
+    <li class="">
+      <section class="mdc-card__primary">
+        <h1 class="mdc-card__title mdc-card__title--large">October 2017</h1>
+      </section>
+      <section class="mdc-card__supporting-text">
+        <ul>
+          <li>Drunk Uncle Kir // 2017-10-02 - 2017-10-08 <small>[5]</small></li>
+          <li>Drunk Uncle Kir // 2017-10-08 - 2017-10-15 <small>[6]</small></li>
+          <li>Drunk Uncle Kir // 2017-10-16 - 2017-10-22 <small>[7]</small></li>
+          <li>Spectra // 2017-10-23 - 2017-10-29 <small>[1]</small></li>
+          <li>Insui // 2017-10-30 - 2710-11-05<small>[5]</small></li>
+      </section>
+    </li>
+  </ul>
+</div>
+
+<div class="mdc-layout-grid__cell--span-4 mdc-card-container">
+  <form class="mdc-card" action="{{ url_for('api.admin.give_admin') }}" method="post">
+    <section class="mdc-card__primary">
+      <h1 class="mdc-card__title mdc-card__title--large">Give Admin Status</h1>
+      <h2 class="mdc-card__subtitle">Grant Admin status to a non-admin user.</h2>
+    </section>
+    <section class="mdc-card__supporting-text">
+      <div class="mdc-select">
+        <select class="mdc-select__surface" name="admin_user">
+          <option value="" selected="">Pick a user</option>
+          {% for option in nonadmin_users -%}
+          <option value="{{ option.uid }}">{{ option.username }}</option>
+          {%- endfor %}
+        </select>
+        <div class="mdc-select__bottom-line"></div>
+      </div>
+    </section>
+    <section class="mdc-card__actions">
+      <button class="mdc-ripple-surface mdc-button mdc-card__action" type="submit">Submit</button>
+    </section>
+  </form>
+  <form class="mdc-card" action="{{ url_for('api.admin.ban') }}" method="post">
+    <section class="mdc-card__primary">
+      <h1 class="mdc-card__title mdc-card__title--large">Ban User</h1>
+      <h2 class="mdc-card__subtitle">Remove ability for user to log in.</h2>
+    </section>
+    <section class="mdc-card__supporting-text">
+      <div class="mdc-select">
+        <select class="mdc-select__surface" name="admin_user">
+          <option value="" selected="">Pick a user</option>
+          {% for option in nonadmin_users -%}
+          <option value="{{ option.uid }}">{{ option.username }}</option>
+          {%- endfor %}
+        </select>
+        <div class="mdc-select__bottom-line"></div>
+      </div>
+      <div class="mdc-text-field mdc-text-field--upgraded">
+        <input type="text" id="reason" class="mdc-text-field__input" name="reason" required>
+        <label class="mdc-text-field__label" for="reason">Reason</label>
+        <div class="mdc-text-field__bottom-line"></div>
+      </div>
+    </section>
+    <section class="mdc-card__actions">
+      <button class="mdc-ripple-surface mdc-button mdc-card__action" type="submit">Submit</button>
+    </section>
+  </form>
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<form class="mdc-card" method="post" action="{{ url_for('ui.admin.submit_loreward') }}">
+  <section class="mdc-card__primary">
+    <h1 class="mdc-card__title mdc-card__title--large">Submit Loreward</h1>
+    <h2 class="mdc-card__subtitle">U know what to do, Burg bb</h2>
+  </section>
+  <section class="mdc-card__supporting-text">
+    <div>
+      <div class="mdc-form-field">
+        <div class="mdc-radio">
+          <input class="mdc-radio__native-control" type="radio" name="lw_type" value="daily" id="radio-daily" checked>
+          <div class="mdc-radio__background">
+            <div class="mdc-radio__outer-circle"></div>
+            <div class="mdc-radio__inner-circle"></div>
+          </div>
+        </div>
+        <label for="radio-daily">Daily Loreward</label>
+      </div>
+      <br />
+      <div class="mdc-form-field">
+        <div class="mdc-radio">
+          <input class="mdc-radio__native-control" type="radio" name="lw_type" value="weekly" id="radio-weekly">
+          <div class="mdc-radio__background">
+            <div class="mdc-radio__outer-circle"></div>
+            <div class="mdc-radio__inner-circle"></div>
+          </div>
+        </div>
+        <label for="radio-weekly">Weekly Loreward</label>
+      </div>
+      <br />
+      <div class="mdc-form-field">
+        <div class="mdc-radio">
+          <input class="mdc-radio__native-control" type="radio" name="lw_type" value="monthly" id="radio-monthly">
+          <div class="mdc-radio__background">
+            <div class="mdc-radio__outer-circle"></div>
+            <div class="mdc-radio__inner-circle"></div>
+          </div>
+        </div>
+        <label for="radio-monthly">Monthly Loreward</label>
+      </div>
+      <br />
+      <div class="mdc-form-field">
+        <div class="mdc-radio">
+          <input class="mdc-radio__native-control" type="radio" name="lw_type" value="annual" id="radio-annual">
+          <div class="mdc-radio__background">
+            <div class="mdc-radio__outer-circle"></div>
+            <div class="mdc-radio__inner-circle"></div>
+          </div>
+        </div>
+        <label for="radio-annual">Annual Loreward</label>
+      </div>
+      <div class="mdc-text-field mdc-text-field--upgraded">
+        <input id="lw_nation" class="mdc-text-field__input" name="lw_nation"
+        required type="text" list="lw_nation_list">
+        <label class="mdc-text-field__label" for="lw_nation">Nation</label>
+        <div class="mdc-text-field__bottom-line"></div>
+        <datalist id="lw_nation_list">{% for nation in nations %}
+          <option value="{{ nation }}"></option>
+        {% endfor %}</datalist>
+      </div>
+      <div class="mdc-text-field mdc-text-field--upgraded">
+        <input id="lw_date" class="mdc-text-field__input" name="lw_date"
+        required type="date" value="{{ date }}">
+        <div class="mdc-text-field__bottom-line"></div>
+      </div>
+    </div>
+  </section>
+  <section class="mdc-card__actions">
+    <button name="submit" type="submit" class="mdc-ripple-surface mdc-button mdc-card__action">Submit</button>
+  </section>
+</form>
+{% endblock %}
