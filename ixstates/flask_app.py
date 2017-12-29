@@ -1,8 +1,14 @@
 "Creates blueprints from submodules and create a Flask app."
 import flask
+import ixstates.ui.errors
 import ixstates.ui.index
+import ixstates.ui.admin
+import ixstates.ui.mail
+import ixstates.api.admin
+import ixstates.api.mail
 import ixstates.api.messages
 import ixstates.api.user_management
+import ixstates.api.lorewards
 import markdown
 from cachetools import func as functools
 
@@ -13,10 +19,16 @@ with open("/dev/random", "rb") as f:
     app.secret_key = f.read(24)
 
 app.register_blueprint(ixstates.ui.index.blueprint)
+app.register_blueprint(ixstates.ui.admin.blueprint, url_prefix="/admin")
+app.register_blueprint(ixstates.ui.errors.blueprint, url_prefix="/errors")
+app.register_blueprint(ixstates.ui.mail.blueprint, url_prefix="/mail")
 
+app.register_blueprint(ixstates.api.admin.blueprint, url_prefix="/api")
+app.register_blueprint(ixstates.api.mail.blueprint, url_prefix="/api")
 app.register_blueprint(ixstates.api.messages.blueprint, url_prefix="/api")
 app.register_blueprint(
     ixstates.api.user_management.blueprint, url_prefix="/api")
+app.register_blueprint(ixstates.api.lorewards.blueprint, url_prefix="/api")
 
 
 @app.template_filter('render_markdown')
