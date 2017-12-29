@@ -24,19 +24,20 @@ def handler():
             if bcrypt.checkpw(password, user["password"].encode("ascii")):
                 flask.session["user"] = user["username"]
                 flask.session["uid"] = user["uid"]
-                util.queue_message("Login successful for " +
-                                   repr(user["username"]))
+                flask.session["admin"] = user["admin"] == 1
+                util.queue_message("Login successful for %r" %
+                                   user["username"])
             else:
                 util.queue_message(
-                    "Login failed: Incorrect password for " +
-                    repr(user["username"]))
+                    "Login failed: Incorrect password for %r" %
+                    user["username"])
         except KeyError as err:
             util.queue_message("Invalid POST data for logging in.")
             flask.session["error"] = repr(err)
             return flask.abort(400)
         except StopIteration:
-            util.queue_message("Login failed: No user found: " + repr(
-                form["username"]))
+            util.queue_message("Login failed: No user found: %r" %
+                               form["username"])
             return util.redirect("ui.index.index")
     elif flask.request.form.get("register") is not None:
         password = form["password"].encode("ascii")
@@ -45,12 +46,12 @@ def handler():
                             (form["username"],
                              bcrypt.hashpw(password, bcrypt.gensalt())))
         except sqlite3.IntegrityError:
-            util.queue_message("User already exists: " +
-                               repr(form["username"]))
+            util.queue_message("User already exists: %r" %
+                               form["username"])
     else:
         util.queue_message("Invalid form information.")
-        flask.session["error"] = "login|register not in " + repr(
-            flask.request.form)
+        flask.session["error"] = ("login|register not in %r" %
+                                  flask.request.form)
     return util.redirect("ui.index.index")
 
 
