@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block app %}
+<div class="mdc-card">
+  <section class="mdc-card__primary">
+    <h1 class="mdc-card__title mdc-card__title--large">Forbidden</h1>
+    <h2 class="mdc-card__subtitle">You are not authorized to view this page.</h2>
+  </section>
+  <section class="mdc-card__supporting-text">
+    <p>
+      If you are not logged in, you might need to be logged in to see this
+      page.  If you are logged in, and believe you should have access to this
+      page, contact a website administrator for further support.
+    </p>
+  </section>
+  <section class="mdc-card__actions">
+    <a class="mdc-button mdc-button--compact mdc-card__action mdc-ripple-surface" href="/">Index</a>
+  </section>
+</div>
+{% endblock %}
