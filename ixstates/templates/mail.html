@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block app %}
+{% for mail in mails %}
+<form class="mdc-card" method="post" action="{{ url_for('api.mail.send') }}">
+  <section class="mdc-card__primary">
+    <h1 class="mdc-card__title mdc-card__title--large">{{ mail.subject }}</h1>
+    <h2 class="mdc-card__subtitle">
+      <span>Users: [{{ mail.users | join(', ') }}]<span>
+    </h2>
+  </section>
+  <section class="mdc-card__supporting-text">
+    {% for message in mail.messages %}
+    <p>
+      {% if message.user_uid == session.get("uid", 0) %}
+        {% set datecolor = "rgba(0, 0, 0, 0.62)" %}
+        {% set namecolor = "red" %}
+      {% else %}
+        {% set datecolor = "rgba(0, 0, 0, 0.50)" %}
+        {% set namecolor = "blue" %}
+      {% endif %}
+      <span style="color: {{ datecolor }}">
+        [{{ message.date.format("YYYY-MM-DD HH:mm") }}]
+      </span>
+      <span style="color: {{ namecolor }}">{{ message.user }}</span>:
+      {{ message.text }}
+    </p>
+    {% endfor %}
+    <div class="mdc-text-field mdc-text-field--upgraded">
+      <input id="reply" class="mdc-text-field__input" name="reply"
+      type="text">
+      <label class="mdc-text-field__label" for="reply">Message...</label>
+      <div class="mdc-text-field__bottom-line"></div>
+    </div>
+  </section>
+  <section class="mdc-card__actions">
+    <button name="send_reply" type="submit"
+      class="mdc-ripple-surface mdc-button mdc-button--compact mdc-card__action">Reply</button>
+    <button name="archive" type="submit"
+      class="mdc-ripple-surface mdc-button mdc-button--compact mdc-card__action">Archive</button>
+  </section>
+</form>
+{% endfor %}
+{% endblock %}
+
+{% block sidebar %}
+<form class="mdc-card" method="post" action="{{ url_for('api.mail.new') }}">
+  <section class="mdc-card__primary">
+    <h1 class="mdc-card__title mdc-card__title--large">New Mail</h1>
+    <h2 class="mdc-card__subtitle"></h2>
+  </section>
+  <section class="mdc-card__supporting-text">
+    <div class="mdc-text-field mdc-text-field--upgraded">
+      <input id="users" class="mdc-text-field__input" name="users"
+      type="text">
+      <label class="mdc-text-field__label" for="users">User cards would go here but FUCK</label>
+      <div class="mdc-text-field__bottom-line"></div>
+    </div>
+    <div class="mdc-text-field mdc-text-field--upgraded">
+      <input id="message" class="mdc-text-field__input" name="message"
+      type="text">
+      <label class="mdc-text-field__label" for="message">Message...</label>
+      <div class="mdc-text-field__bottom-line"></div>
+    </div>
+  </section>
+  <section class="mdc-card__actions">
+    <button name="send" type="submit"
+      class="mdc-ripple-surface mdc-button mdc-button--compact mdc-card__action">Send</button>
+  </section>
+</form>
+{% endblock %}
