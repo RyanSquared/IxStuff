@@ -98,7 +98,7 @@ INSERT INTO users (username, password, admin) VALUES ('Burgbb',
 
 
 executeSQL("""
-CREATE TABLE IF NOT EXISTS announcements (
+CREATE TABLE IF NOT EXISTS posts (
     uid INTEGER PRIMARY KEY AUTOINCREMENT,
     poster INTEGER NOT NULL,
     date INTEGER NOT NULL,
@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS announcements (
 );""")
 
 executeSQL("""
-INSERT INTO announcements (poster, date, title, content) VALUES (
+INSERT INTO posts (poster, date, title, content) VALUES (
     1, ?, 'IxRebranding', ?
 );""", (arrow.get().datetime, """
 Ixnay has been a region for many years, but this fuckin bitch ass cunt
@@ -116,14 +116,14 @@ things. The forums that are currently being used aren't a good way to
 manage Ixnay, so we're moving to this new custom CMS called IxStates.
 So far, here's the battle plan:
 
-1. Create the IxBlog for the index page
-2. Make the admin dashboard
-3. Write the mail/notification system
-4. Let users edit their stats
-5. Create a map request submission form
-6. Make admins able to approve stats changes
-7. Give each user a miniblog for small ICN updates
-8. Recreate the forums as an IxStates subapp
+- [ ] Create the IxBlog for the index page
+- [ ] Make the admin dashboard
+- [ ] Write the mail/notification system
+- [ ] Let users edit their stats
+- [ ] Create a map request submission form
+- [ ] Make admins able to approve stats changes
+- [ ] Give each user a miniblog for small ICN updates
+- [ ] Recreate the forums as an IxStates subapp
 
 These steps will take a bit of time, so we at IxStaff hope no one minds as
 the nation undergoes our reimagining efforts. If you'd like to help or get

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block app %}
-{%- for post in announcements %}
+{%- for post in posts %}
 <div class="mdc-card">
   <section class="mdc-card__primary">
     <h1 class="mdc-card__title mdc-card__title--large">{{ post.title }}</h1>
@@ -10,7 +10,7 @@
         <span style="color: red;">{{ post.username }}</span>
       {%- else -%}
         {{ post.username }}
-      {%- endif %} // {{ post.date -}}
+      {%- endif %} // {{ post.date.format("YYYY-MM-DD HH:mm:ss") -}}
     </h2>
   </section>
   <section class="mdc-card__supporting-text">
@@ -20,4 +20,70 @@
   </section>
 </div>
 {% endfor -%}
+{% endblock %}
+
+{% block sidebar %}
+{% if session.get("uid") is not none %}
+<form class="mdc-card" method="post"
+  action="{{ url_for('api.blog.post') }}">
+  <section class="mdc-card__primary">
+    <h1 class="mdc-card__title mdc-card__title--large">Hi!</h1>
+    <h2 class="mdc-card__subtitle">Make post.</h2>
+  </section>
+  <section class="mdc-card__supporting-text">
+    <div class="mdc-text-field mdc-text-field--upgraded">
+      <input type="text" id="post_title" class="mdc-text-field__input" name="post_title">
+      <label class="mdc-text-field__label" for="post_title">Post Title</label>
+      <div class="mdc-text-field__bottom-line"></div>
+    </div>
+    <div class="mdc-text-field mdc-text-field--textarea mdc-text-field--upgraded">
+      <textarea id="textarea" class="mdc-text-field__input fix-padding" name="post_body"
+        placeholder="New Post" rows="5"></textarea>
+    </div>
+    <div id="preview" class="markdown"></div>
+  </section>
+  <section class="mdc-card__actions">
+    <button name="new_post" type="submit"
+      class="mdc-ripple-surface mdc-button mdc-button--compact mdc-card__action">
+      Submit
+    </button>
+  </section>
+  <script>
+    var preview = $("#preview");
+    var textarea = $("textarea[name=post_body]");
+    function updatePreview() {
+      $.ajax("{{ url_for('render_markdown_route') }}", {
+        type: "POST",
+        data: {
+          content: textarea.val(),
+        },
+      }).done(data => {
+        preview.html(data);
+      });
+    };
+    var time = Date.now() / 1000;
+    var hasShownPreview = false;
+    textarea.keyup(function() {
+      const timeSet = 1500
+      var $this = $(this);
+      time = Date.now();
+      new Promise(resolve => setTimeout(resolve, timeSet)).then(()=> {
+        if (time + timeSet <= Date.now()) {
+          updatePreview();
+          hasShownPreview = false;
+        }
+      }).catch(err => {
+        console.log(err);
+        if (hasShownPreview)
+          return;
+        hasShownPreview = true;
+        document.snackbar.show({
+          message: "Error occured with getting preview. View console for info.",
+          timeout: 2750,
+        })
+      });
+    });
+  </script>
+</form>
+{% endif %}
 {% endblock %}

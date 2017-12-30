@@ -5,15 +5,23 @@ import ixstates.ui.index
 import ixstates.ui.admin
 import ixstates.ui.mail
 import ixstates.api.admin
+import ixstates.api.blog
 import ixstates.api.mail
 import ixstates.api.messages
 import ixstates.api.user_management
 import ixstates.api.lorewards
-import markdown
 from cachetools import func as functools
+import markdown
+import markdown.extensions.tables
+import gfm
 
 
 app = flask.Flask(__name__)  # pylint: disable=invalid-name
+md = markdown.Markdown(extensions=[  # pylint: disable=invalid-name
+    gfm.AutolinkExtension(), gfm.AutomailExtension(),
+    gfm.HiddenHiliteExtension(), gfm.SemiSaneListExtension(),
+    gfm.SpacedLinkExtension(), gfm.StrikethroughExtension(),
+    gfm.TaskListExtension(), markdown.extensions.tables.TableExtension()])
 app.config['appname'] = "IxStates"
 with open("/dev/random", "rb") as f:
     app.secret_key = f.read(24)
@@ -24,6 +32,7 @@ app.register_blueprint(ixstates.ui.errors.blueprint, url_prefix="/errors")
 app.register_blueprint(ixstates.ui.mail.blueprint, url_prefix="/mail")
 
 app.register_blueprint(ixstates.api.admin.blueprint, url_prefix="/api")
+app.register_blueprint(ixstates.api.blog.blueprint, url_prefix="/api")
 app.register_blueprint(ixstates.api.mail.blueprint, url_prefix="/api")
 app.register_blueprint(ixstates.api.messages.blueprint, url_prefix="/api")
 app.register_blueprint(
@@ -35,7 +44,13 @@ app.register_blueprint(ixstates.api.lorewards.blueprint, url_prefix="/api")
 @functools.lru_cache(maxsize=32)
 def render_markdown(content):
     "Render some Markdown content to HTML."
-    return markdown.markdown(content)
+    return md.convert(content)
+
+
+@app.route("/render_markdown", methods=["POST"])
+def render_markdown_route():
+    "Render Markdown and return the data."
+    return render_markdown(flask.request.form.get("content", ""))
 
 
 @app.before_request

@@ -118,12 +118,12 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script>
       var MDCSnackbar = window.mdc.snackbar.MDCSnackbar;
-      var snackbar = new MDCSnackbar(document.getElementById('messages'));
+      document.snackbar = new MDCSnackbar(document.getElementById('messages'));
       $(document).ready(()=> {
         window.mdc.autoInit();
         $.ajax('{{ url_for('api.messages.get_messages') }}').done((data)=> {
 					for (message of data)
-            snackbar.show({
+            document.snackbar.show({
               message: message,
               timeout: 2750,
             });
