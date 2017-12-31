@@ -9,7 +9,7 @@ minifier = htmlmin.Minifier(  # pylint: disable=invalid-name
     remove_comments=True,
     remove_empty_space=True,
     remove_all_empty_space=True)
-DB_CON = sqlite3.connect(":memory:")
+DB_CON = sqlite3.connect("ixnay.db")
 
 
 def requires_login(function):
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS users (
     uid INTEGER PRIMARY KEY AUTOINCREMENT,
     username VARCHAR NOT NULL,
     password VARCHAR NOT NULL,
-    admin TINYINT,
+    admin TINYINT DEFAULT 0,
     UNIQUE(username)
 );""")
 
