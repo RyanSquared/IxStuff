@@ -13,6 +13,13 @@ LOGIN_QUERY = "SELECT * FROM users WHERE username LIKE ?;"
 REGISTER_QUERY = "INSERT INTO users (username, password) VALUES (?, ?);"
 
 
+def convert_string(item):
+    "Convert a Unicode string or bytes object to a binary type"
+    if isinstance(item, six.text_type):
+        return bytes(bytearray(item, "ascii"))
+    return item
+
+
 @blueprint.route("/login", methods=["POST"])
 def handler():
     "End route for user logins."
@@ -21,8 +28,8 @@ def handler():
         try:
             user = next(util.querySQL(LOGIN_QUERY,
                                       (form["username"],)))
-            password = six.binary_type(form["password"])
-            if bcrypt.checkpw(password, six.binary_type(user["password"])):
+            password = convert_string(form["password"])
+            if bcrypt.checkpw(password, convert_string(user["password"])):
                 flask.session["user"] = user["username"]
                 flask.session["uid"] = user["uid"]
                 flask.session["admin"] = user["admin"] == 1
@@ -41,7 +48,7 @@ def handler():
                                form["username"])
             return util.redirect("ui.index.index")
     elif flask.request.form.get("register") is not None:
-        password = six.binary_type(form["password"])
+        password = convert_string(form["password"])
         try:
             util.executeSQL(REGISTER_QUERY,
                             (form["username"],
