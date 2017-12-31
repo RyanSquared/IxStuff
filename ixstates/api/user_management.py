@@ -2,6 +2,7 @@
 import sqlite3
 import bcrypt
 import flask
+import six
 from ixstates import util
 
 blueprint = flask.Blueprint(  # pylint: disable=invalid-name
@@ -20,8 +21,8 @@ def handler():
         try:
             user = next(util.querySQL(LOGIN_QUERY,
                                       (form["username"],)))
-            password = form["password"].encode("ascii")
-            if bcrypt.checkpw(password, user["password"].encode("ascii")):
+            password = six.binary_type(form["password"])
+            if bcrypt.checkpw(password, six.binary_type(user["password"])):
                 flask.session["user"] = user["username"]
                 flask.session["uid"] = user["uid"]
                 flask.session["admin"] = user["admin"] == 1
@@ -40,7 +41,7 @@ def handler():
                                form["username"])
             return util.redirect("ui.index.index")
     elif flask.request.form.get("register") is not None:
-        password = form["password"].encode("ascii")
+        password = six.binary_type(form["password"])
         try:
             util.executeSQL(REGISTER_QUERY,
                             (form["username"],
