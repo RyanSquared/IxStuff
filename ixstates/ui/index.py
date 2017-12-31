@@ -7,7 +7,7 @@ blueprint = flask.Blueprint('ui.index',  # pylint: disable=invalid-name
                             __name__)
 
 APP_QUERY = ("SELECT * FROM posts LEFT JOIN users ON "
-             "posts.poster = users.uid ORDER BY posts.date;")
+             "posts.poster = users.uid ORDER BY posts.date DESC;")
 
 
 def add_arrow(post):

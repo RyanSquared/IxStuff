@@ -66,8 +66,8 @@ def executeSQL(query, args=None):  # pylint: disable=invalid-name
     "Proxy wrapper to automatically create and destroy a cursor."
     if args is None:
         args = []
-    cursor = DB_CON.cursor()
-    cursor.execute(query, args)
+    DB_CON.execute(query, args)
+    DB_CON.commit()
 
 
 def querySQL(query, args=None):  # pylint: disable=invalid-name
@@ -90,10 +90,10 @@ CREATE TABLE IF NOT EXISTS users (
 );""")
 
 executeSQL("""
-INSERT INTO users (username, password, admin) VALUES ('RyanSquared',
+INSERT OR IGNORE INTO users (username, password, admin) VALUES ('RyanSquared',
 '$2b$12$bGLD75o2VfH4/YbaR/NSNuolyzS1Rfukcw80P7Xhj2ygDS0HyxUcy', 1);""")
 executeSQL("""
-INSERT INTO users (username, password, admin) VALUES ('Burgbb',
+INSERT OR IGNORE INTO users (username, password, admin) VALUES ('Burgbb',
 '$2b$12$bGLD75o2VfH4/YbaR/NSNuolyzS1Rfukcw80P7Xhj2ygDS0HyxUcy', 0);""")
 
 
@@ -103,13 +103,14 @@ CREATE TABLE IF NOT EXISTS posts (
     poster INTEGER NOT NULL,
     date INTEGER NOT NULL,
     title VARCHAR NOT NULL,
-    content VARCHAR NOT NULL
+    content VARCHAR NOT NULL,
+    UNIQUE(poster, date)
 );""")
 
 executeSQL("""
-INSERT INTO posts (poster, date, title, content) VALUES (
+INSERT OR IGNORE INTO posts (poster, date, title, content) VALUES (
     1, ?, 'IxRebranding', ?
-);""", (arrow.get().datetime, """
+);""", (arrow.get().timestamp, """
 Ixnay has been a region for many years, but this fuckin bitch ass cunt
 we call Heku has a tad bit of an issue and wants to start redoing some
 things. The forums that are currently being used aren't a good way to
@@ -144,7 +145,7 @@ CREATE TABLE IF NOT EXISTS lorewards (
 );""")
 
 executeSQL("""
-INSERT INTO lorewards (giver, receiver, date, type)
+INSERT OR IGNORE INTO lorewards (giver, receiver, date, type)
 VALUES (1, 1, 1513814400, 1);""")
 
 executeSQL("""
@@ -168,10 +169,13 @@ CREATE TABLE IF NOT EXISTS messages2mails (
     date INTEGER NOT NULL
 );""")
 
-executeSQL("INSERT INTO mails (subject) VALUES ('Testing Message');")
-executeSQL("INSERT INTO users2mails (mail_uid, user_uid) VALUES (1, 1);")
-executeSQL("INSERT INTO users2mails (mail_uid, user_uid) VALUES (1, 2);")
-executeSQL("""INSERT INTO messages2mails (mail_uid, user_uid, text, date)
-VALUES (1, 2, 'Work on IxStates', 1514390239);""")
-executeSQL("""INSERT INTO messages2mails (mail_uid, user_uid, text, date)
-VALUES (1, 1, 'no u fgt', 1514390253);""")
+try:
+    next(querySQL("SELECT * FROM mails;"))
+except StopIteration:
+    executeSQL("INSERT INTO mails (subject) VALUES ('Testing Message');")
+    executeSQL("INSERT INTO users2mails (mail_uid, user_uid) VALUES (1, 1);")
+    executeSQL("INSERT INTO users2mails (mail_uid, user_uid) VALUES (1, 2);")
+    executeSQL("""INSERT INTO messages2mails (mail_uid, user_uid, text, date)
+    VALUES (1, 2, 'Work on IxStates', 1514390239);""")
+    executeSQL("""INSERT INTO messages2mails (mail_uid, user_uid, text, date)
+    VALUES (1, 1, 'no u fgt', 1514390253);""")
