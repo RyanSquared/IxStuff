@@ -9,7 +9,7 @@ minifier = htmlmin.Minifier(  # pylint: disable=invalid-name
     remove_comments=True,
     remove_empty_space=True,
     remove_all_empty_space=True)
-DB_CON = sqlite3.connect(":memory:", check_same_thread=False)
+DB_CON = sqlite3.connect(":memory:")
 
 
 def requires_login(function):
