@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS posts (
 executeSQL("""
 INSERT OR IGNORE INTO posts (poster, date, title, content) VALUES (
     1, ?, 'IxRebranding', ?
-);""", (arrow.get().timestamp, """
+);""", (1513814400, """
 Ixnay has been a region for many years, but this fuckin bitch ass cunt
 we call Heku has a tad bit of an issue and wants to start redoing some
 things. The forums that are currently being used aren't a good way to
