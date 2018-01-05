@@ -17,6 +17,14 @@
     {% autoescape false -%}
     {{ post.content | render_markdown }}
     {%- endautoescape %}
+    <hr />
+    <div class="mdc-layout-grid__inner">
+      <p class="mdc-layout-grid__cell--span-6">
+        hi, this is some content to go below posts. this is just some dummy content
+        for now but in the future could include information about the nation that
+        wrote this post.
+      </p>
+    </div>
   </section>
 </div>
 {% endfor -%}
@@ -32,13 +40,14 @@
   </section>
   <section class="mdc-card__supporting-text">
     <div class="mdc-text-field mdc-text-field--upgraded">
-      <input type="text" id="post_title" class="mdc-text-field__input" name="post_title">
+      <input type="text" id="post_title" class="mdc-text-field__input"
+        name="post_title" required>
       <label class="mdc-text-field__label" for="post_title">Post Title</label>
       <div class="mdc-text-field__bottom-line"></div>
     </div>
     <div class="mdc-text-field mdc-text-field--textarea mdc-text-field--upgraded">
-      <textarea id="textarea" class="mdc-text-field__input fix-padding" name="post_body"
-        placeholder="New Post" rows="5"></textarea>
+      <textarea id="textarea" class="mdc-text-field__input fix-padding"
+        name="post_body" placeholder="New Post" rows="5" required></textarea>
     </div>
     <div id="preview" class="markdown"></div>
   </section>
