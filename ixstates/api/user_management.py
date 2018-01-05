@@ -53,6 +53,7 @@ def handler():
             util.executeSQL(REGISTER_QUERY,
                             (form["username"],
                              bcrypt.hashpw(password, bcrypt.gensalt())))
+            util.queue_message("User registered: %r" % form["username"])
         except sqlite3.IntegrityError:
             util.queue_message("User already exists: %r" %
                                form["username"])

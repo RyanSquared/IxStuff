@@ -18,4 +18,5 @@ def post():
     body = flask.request.form["post_body"]
     util.executeSQL(NEW_POST_QUERY,
                     [flask.session["uid"], arrow.now().timestamp, title, body])
+    util.queue_message("New post made: %r" % title)
     return util.redirect("ui.index.index")
