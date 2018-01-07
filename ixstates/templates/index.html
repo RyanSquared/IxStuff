@@ -10,7 +10,7 @@
         <span style="color: red;">{{ post.username }}</span>
       {%- else -%}
         {{ post.username }}
-      {%- endif %} // {{ post.date.format("YYYY-MM-DD HH:mm:ss") -}}
+      {%- endif %} // {{ post.date.format("YYYY-MM-DD HH:mm") -}}
     </h2>
   </section>
   <section class="mdc-card__supporting-text">
@@ -58,6 +58,7 @@
     </button>
   </section>
   <script>
+    // Controller for textarea
     var preview = $("#preview");
     var textarea = $("textarea[name=post_body]");
     function updatePreview() {
