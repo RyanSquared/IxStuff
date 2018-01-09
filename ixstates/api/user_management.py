@@ -64,6 +64,13 @@ def handler():
     return util.redirect("ui.index.index")
 
 
+@blueprint.route("/logout")
+def logout():
+    "End route for user logouts."
+    flask.session.pop("uid")
+    return util.redirect("ui.index.index")
+
+
 @blueprint.route("/error")
 def get_error():
     "Return an error stored in the session"
