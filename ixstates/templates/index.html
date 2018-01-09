@@ -126,11 +126,15 @@
       </h2>
     </header>
     <section id="my-mdc-dialog-description" class="mdc-dialog__body">
-      <div class="mdc-text-field mdc-text-field--textarea mdc-text-field--upgraded">
-        <textarea id="textarea" class="mdc-text-field__input fix-padding"
-          name="post_body" placeholder="New Post" rows="5" required></textarea>
+      <div class="mdc-layout-grid__inner">
+        <div class="mdc-layout-grid__cell--span-6">
+          <div class="mdc-text-field mdc-text-field--textarea mdc-text-field--upgraded">
+            <textarea id="textarea" class="mdc-text-field__input fix-padding"
+              name="post_body" placeholder="New Post" rows="5" required></textarea>
+          </div>
+        </div>
+        <div id="preview" class="markdown mdc-layout-grid__cell--span-6"></div>
       </div>
-      <div id="preview" class="markdown"></div>
     </section>
     <footer class="mdc-dialog__footer">
       <button name="new_post" type="submit"
