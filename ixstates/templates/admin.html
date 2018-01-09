@@ -60,7 +60,7 @@
     </section>
     <section class="mdc-card__supporting-text">
       <div class="mdc-select">
-        <select class="mdc-select__surface" name="admin_user">
+        <select class="mdc-select__surface" name="banned_user">
           <option value="" selected="">Pick a user</option>
           {% for option in nonadmin_users -%}
           <option value="{{ option.uid }}">{{ option.username }}</option>
