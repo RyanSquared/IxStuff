@@ -26,15 +26,25 @@ def handler():
     form = flask.request.form
     if flask.request.form.get("login") is not None:
         try:
+            # Check if user exists
             user = next(util.querySQL(LOGIN_QUERY,
                                       (form["username"],)))
             password = convert_string(form["password"])
+            # Check if password is correct
             if bcrypt.checkpw(password, convert_string(user["password"])):
-                flask.session["user"] = user["username"]
-                flask.session["uid"] = user["uid"]
-                flask.session["admin"] = user["admin"] == 1
-                util.queue_message("Login successful for %r" %
-                                   user["username"])
+                # Check if user is banned
+                try:
+                    reason = next(util.querySQL(
+                        "SELECT reason FROM bans WHERE user_uid = ?;",
+                        (user["uid"],)))["reason"]
+                    util.queue_message("You've been banned: %r" % reason)
+                except StopIteration:
+                    # User has not been banned
+                    flask.session["user"] = user["username"]
+                    flask.session["uid"] = user["uid"]
+                    flask.session["admin"] = user["admin"] == 1
+                    util.queue_message("Login successful for %r" %
+                                       user["username"])
             else:
                 util.queue_message(
                     "Login failed: Incorrect password for %r" %
