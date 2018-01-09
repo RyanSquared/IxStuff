@@ -67,7 +67,8 @@ def handler():
 @blueprint.route("/logout")
 def logout():
     "End route for user logouts."
-    flask.session.pop("uid")
+    for key in flask.session:
+        flask.session.pop(key)
     return util.redirect("ui.index.index")
 
 
