@@ -36,7 +36,7 @@
         <section class="mdc-toolbar__section mdc-toolbar__section--align-end" role="toolbar">
           {% block buttons %}
           {% endblock %}
-          {% if session.get("uid") is not none -%}
+          {% if session.uid -%}
           <a href="{{ url_for('api.user_management.logout') }}"
             class="material-icons mdc-toolbar__icon">exit_to_app</a>
           {%- endif %}
@@ -99,7 +99,7 @@
                   </div>
                   <div class="mdc-text-field mdc-text-field--upgraded">
                     <input id="password" class="mdc-text-field__input" name="password"
-                      {% if session.uid is not none %}autocomplete="off"{% else %}autocomplete="on"{% endif %}
+                      {% if session.uid %}autocomplete="off"{% else %}autocomplete="on"{% endif %}
                       required pattern=".{8,}" type="password" aria-controls="password-verify-msg">
                     <label class="mdc-text-field__label mdc-text-field__label--float-above" for="password">Password</label>
                     <div class="mdc-text-field__bottom-line"></div>
