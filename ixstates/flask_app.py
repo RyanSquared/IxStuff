@@ -50,6 +50,10 @@ def render_markdown(content):
 @app.route("/render_markdown", methods=["POST"])
 def render_markdown_route():
     "Render Markdown and return the data."
+    # Check if a user is logged in; this is the only time when the Markdown
+    # preview should matter
+    if flask.session.get("uid") is None:
+        return ""
     return render_markdown(flask.request.form.get("content", ""))
 
 
