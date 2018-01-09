@@ -169,6 +169,12 @@ CREATE TABLE IF NOT EXISTS messages2mails (
     date INTEGER NOT NULL
 );""")
 
+executeSQL("""
+CREATE TABLE IF NOT EXISTS bans (
+    user_uid INTEGER NOT NULL,
+    reason VARCHAR NOT NULL
+);""")
+
 try:
     next(querySQL("SELECT * FROM mails;"))
 except StopIteration:
