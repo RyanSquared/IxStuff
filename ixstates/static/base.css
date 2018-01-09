@@ -17,7 +17,7 @@ body {
 }
 .app-main {
   width: 100%;
-  background-color: #eee;
+  background-color: rgba(0, 0, 0, 0.06);
 }
 .mdc-text-field {
   width: 100%;
