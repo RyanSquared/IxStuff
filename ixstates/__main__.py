@@ -36,9 +36,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--keyfile", help="TLS Private Key File (PEM), requires --certfile")
     parser.add_argument("-v", help="Enable Tornado verbose logging",
-                        action="store_true")
+                        default=False, action="store_true")
     args = parser.parse_args()
-    if args.v is not None:
+    if args.v:
         tornado.log.enable_pretty_logging()
 
     if args.certfile and args.keyfile:  # Both exist
