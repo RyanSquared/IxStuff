@@ -1,5 +1,18 @@
 {% extends "base.html" %}
 
+{% block buttons %}
+{% if session.get("uid") is not none %}
+<button class="material-icons mdc-toolbar__icon" id="open-editor">create</button>
+<script>
+  $("#open-editor").click(()=> {
+    $("#post-editor").each((_, element)=> {
+      $(element).data("dialog").show();
+    });
+  });
+</script>
+{% endif %}
+{% endblock %}
+
 {% block app %}
 {%- for post in posts %}
 <div class="mdc-card">
@@ -32,7 +45,7 @@
 
 {% block sidebar %}
 {% if session.get("uid") is not none %}
-<form class="mdc-card" method="post"
+<!--form class="mdc-card" method="post"
   action="{{ url_for('api.blog.post') }}">
   <section class="mdc-card__primary">
     <h1 class="mdc-card__title mdc-card__title--large">Hi!</h1>
@@ -94,6 +107,83 @@
       });
     });
   </script>
-</form>
+</form-->
 {% endif %}
+{% endblock %}
+
+{% block body %}
+<form id="post-editor" class="mdc-dialog" role="alertdialog" method="post"
+  action="{{ url_for('api.blog.post') }}">
+  <div class="mdc-dialog__surface">
+    <header class="mdc-dialog__header">
+      <h2 id="my-mdc-dialog-label" class="mdc-dialog__header__title">
+        <!-- ::TODO:: text field? -->
+        <div class="mdc-text-field mdc-text-field--upgraded">
+          <input type="text" id="post_title" class="mdc-text-field__input" name="post_title">
+          <label class="mdc-text-field__label" for="post_title">Post Title</label>
+          <div class="mdc-text-field__bottom-line"></div>
+        </div>
+      </h2>
+    </header>
+    <section id="my-mdc-dialog-description" class="mdc-dialog__body">
+      <div class="mdc-text-field mdc-text-field--textarea mdc-text-field--upgraded">
+        <textarea id="textarea" class="mdc-text-field__input fix-padding"
+          name="post_body" placeholder="New Post" rows="5" required></textarea>
+      </div>
+      <div id="preview" class="markdown"></div>
+    </section>
+    <footer class="mdc-dialog__footer">
+      <button name="new_post" type="submit"
+        class="mdc-ripple-surface mdc-button mdc-button--compact mdc-card__action">
+        Submit
+      </button>
+    </footer>
+  </div>
+  <div class="mdc-dialog__backdrop"></div>
+</form>
+<script>
+  // Keep track of this dialog, so do not auto-instanciate in base.html
+  $(document).ready(function() {
+    // Register the dialog to itself via jQuery
+    $("#post-editor").each((_, element)=> {
+      $(element).data("dialog", mdc.dialog.MDCDialog.attachTo(element));
+    });
+    // Setup for preview
+    var preview = $("#preview");
+    var textarea = $("textarea[name=post_body]");
+    function updatePreview() {
+      $.ajax("{{ url_for('render_markdown_route') }}", {
+        type: "POST",
+        data: {
+          content: textarea.val(),
+        },
+      }).done(data => {
+        preview.html(data);
+      });
+    };
+    var time = Date.now() / 1000;
+    var hasShownPreview = false;
+    // Trigger when someone stops typing in the textarea, after 1.5 seconds
+    textarea.keyup(function() {
+      const timeSet = 1500
+      var $this = $(this);
+      time = Date.now();
+      new Promise(resolve => setTimeout(resolve, timeSet)).then(()=> {
+        if (time + timeSet <= Date.now()) {
+          updatePreview();
+          hasShownPreview = false;
+        }
+      }).catch(err => {
+        console.log(err);
+        if (hasShownPreview)
+          return;
+        hasShownPreview = true;
+        document.snackbar.show({
+          message: "Error occured with getting preview. View console for info.",
+          timeout: 2750,
+        })
+      });
+    });
+  });
+</script>
 {% endblock %}
