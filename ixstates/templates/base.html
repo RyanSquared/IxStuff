@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width" />
     <title>{% block title %}{{ config.appname }}{% endblock %}</title>
     <link rel="stylesheet" href="{{ cors_link('https://fonts.googleapis.com/icon?family=Material+Icons', 'font') }}">
-    <link rel="stylesheet" href="{{ cors_link('https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css') }}">
-    <script src="{{ cors_link('https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ cors_link('https://unpkg.com/material-components-web@0.28.0/dist/material-components-web.min.css') }}">
+    <script src="{{ cors_link('https://unpkg.com/material-components-web@0.28.0/dist/material-components-web.min.js') }}"></script>
     <script src="{{ cors_link('https://code.jquery.com/jquery-3.2.1.min.js') }}"></script>
 
     <link rel="stylesheet" href="{{ static_link('base.css') }}">
+    <link rel="stylesheet" href="{{ static_link('theme.css') }}">
     {% block head %}
     {% endblock %}
   </head>
@@ -17,6 +18,15 @@
   <body class="mdc-typography">
     <header class="mdc-toolbar mdc-toolbar-fixed">
       <div class="mdc-toolbar__row">
+        <style>
+          /* Ugly hack to fix the right-side padding */
+          .mdc-toolbar__icon {
+            padding: 16px;
+          }
+          .mdc-toolbar__section--align-end:last-child {
+            padding-right: 24px;
+          }
+        </style>
         <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
           <span class="mdc-toolbar__title">
             {%- block appname %}{{ config.appname }}{% endblock -%}
@@ -24,36 +34,44 @@
           </span>
         </section>
         <section class="mdc-toolbar__section mdc-toolbar__section--align-end" role="toolbar">
+          {% block buttons %}
+          {% endblock %}
+          {% if session.get("uid") is not none -%}
+          <a href="{{ url_for('api.user_management.logout') }}"
+            class="material-icons mdc-toolbar__icon">exit_to_app</a>
+          {%- endif %}
           <!-- ::TODO:: add stuff? -->
         </section>
       </div>
     </header>
 
     <div class="ixstates-content">
-      <nav class="mdc-permanent-drawer">
-        <div class="mdc-list-group">
-          {% macro render_icon(href, icon, name) -%}
-            {% if href == request.path -%}
-            <a class="mdc-list-item mdc-permanent-drawer--selected mdc-ripple-surface" href="{{ href }}">
-              <i class="material-icons mdc-list-item__start-detail" aria-hidden="true">{{ icon }}</i>{{ name }}
-            </a>
-            {%- else -%}
-            <a class="mdc-list-item mdc-ripple-surface" href="{{ href }}">
-              <i class="material-icons mdc-list-item__start-detail" aria-hidden="true">{{ icon }}</i>{{ name }}
-            </a>
-            {%- endif %}
-          {%- endmacro %}
-          <nav class="mdc-list">
-            {{ render_icon("/", "home", "Index") }}
-            {%- if session.get("uid") %}
-            {%- if session.admin %}
-            {{ render_icon("/admin/", "assignment", "Admin") }}
-            {%- endif %}
-            {{ render_icon("/mail/", "email", "Mail") }}
-            {%- endif %}
-          </nav>
+      <aside class="mdc-drawer mdc-drawer--permanent">
+        <div class="mdc-drawer__drawer">
+          <div class="mdc-list-group">
+            {% macro render_icon(href, icon, name) -%}
+              {% if href == request.path -%}
+              <a class="mdc-list-item mdc-list-item--selected mdc-ripple-surface" href="{{ href }}">
+                <i class="material-icons mdc-list-item__graphic" aria-hidden="true">{{ icon }}</i>{{ name }}
+              </a>
+              {%- else -%}
+              <a class="mdc-list-item mdc-ripple-surface" href="{{ href }}">
+                <i class="material-icons mdc-list-item__graphic" aria-hidden="true">{{ icon }}</i>{{ name }}
+              </a>
+              {%- endif %}
+            {%- endmacro %}
+            <nav class="mdc-list">
+              {{ render_icon("/", "home", "Index") }}
+              {%- if session.get("uid") %}
+              {%- if session.admin %}
+              {{ render_icon("/admin/", "assignment", "Admin") }}
+              {%- endif %}
+              {{ render_icon("/mail/", "email", "Mail") }}
+              {%- endif %}
+            </nav>
+          </div>
         </div>
-      </nav>
+      </aside>
 
       <main class="app-main">
         <div class="mdc-layout-grid">
@@ -103,6 +121,9 @@
         </div>
       </main>
     </div>
+
+    {% block body %}
+    {% endblock %}
 
     <div class="mdc-snackbar"
       id="messages"
