@@ -10,6 +10,7 @@ import ixstates.api.mail
 import ixstates.api.messages
 import ixstates.api.user_management
 import ixstates.api.lorewards
+import ixstates.util as util
 from cachetools import func as functools
 import markdown
 import markdown.extensions.tables
@@ -61,6 +62,23 @@ def render_markdown_route():
 def add_links():
     "Create a response-wide `links` variable for storing Link headers"
     flask.g.links = []
+
+
+@app.before_request
+def check_ban_status():
+    "Check user's status; if banned, log out."
+    uid = flask.session.get("uid")
+    if uid is None:
+        return
+    try:
+        reason = next(util.querySQL(
+            "SELECT reason FROM bans WHERE user_uid = ?;", (uid,)))["reason"]
+        for key in [key for key in flask.session]:
+            flask.session.pop(key)
+        util.queue_message("You've been banned: %r" % reason)
+    except StopIteration:
+        # No user found, return
+        pass
 
 
 auto_translations = {  # pylint: disable=C0103
