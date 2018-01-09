@@ -1,0 +1,12 @@
+/* Colors taken from the Google Material Design guidelines, blue */
+
+:root {
+  /* Primary Color */
+  --mdc-theme-primary: #2196f3;
+  --mdc-theme-primary-light: #6ec6ff;
+  --mdc-theme-primary-dark: #0069c0;
+  /* Secondary Color */
+  --mdc-theme-secondary: #2962ff;
+  --mdc-theme-secondary-light: #768fff;
+  --mdc-theme-secondary-dark: #0039cb;
+}
