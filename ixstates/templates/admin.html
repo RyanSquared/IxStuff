@@ -33,7 +33,8 @@
 </div>
 
 <div class="mdc-layout-grid__cell--span-4 mdc-card-container">
-  <form class="mdc-card" action="{{ url_for('api.admin.give_admin') }}" method="post">
+  <form class="mdc-card" action="{{ url_for('api.admin.give_admin') }}"
+    method="post" autocomplete="off">
     <section class="mdc-card__primary">
       <h1 class="mdc-card__title mdc-card__title--large">Give Admin Status</h1>
       <h2 class="mdc-card__subtitle">Grant Admin status to a non-admin user.</h2>
@@ -53,7 +54,8 @@
       <button class="mdc-ripple-surface mdc-button mdc-card__action" type="submit">Submit</button>
     </section>
   </form>
-  <form class="mdc-card" action="{{ url_for('api.admin.ban') }}" method="post">
+  <form class="mdc-card" action="{{ url_for('api.admin.ban') }}" method="post"
+    autocomplete="off">
     <section class="mdc-card__primary">
       <h1 class="mdc-card__title mdc-card__title--large">Ban User</h1>
       <h2 class="mdc-card__subtitle">Remove ability for user to log in.</h2>
@@ -82,7 +84,8 @@
 {% endblock %}
 
 {% block sidebar %}
-<form class="mdc-card" method="post" action="{{ url_for('ui.admin.submit_loreward') }}">
+<form class="mdc-card" method="post"
+  action="{{ url_for('ui.admin.submit_loreward') }}">
   <section class="mdc-card__primary">
     <h1 class="mdc-card__title mdc-card__title--large">Submit Loreward</h1>
     <h2 class="mdc-card__subtitle">U know what to do, Burg bb</h2>
