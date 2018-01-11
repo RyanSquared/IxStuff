@@ -1,8 +1,20 @@
 {% extends "base.html" %}
 
+{% block buttons %}
+<a href="{{ url_for('ui.mail.index', archived=1) }}"
+  class="material-icons mdc-toolbar__icon">archive</a>
+{% endblock %}
+
 {% block app %}
+{% if not archived %}
+<p>
+  To view archived mails, click on the <i>archive</i> icon at the top right.
+</p>
+{% endif %}
 {% for mail in mails %}
-<form class="mdc-card" method="post" action="{{ url_for('api.mail.send') }}">
+<form class="mdc-card" method="post" action="{{ url_for('api.mail.send') }}"
+  autocomplete="off">
+  <input type="hidden" name="mail_uid" value="{{ mail.uid }}" />
   <section class="mdc-card__primary">
     <h1 class="mdc-card__title mdc-card__title--large">{{ mail.subject }}</h1>
     <h2 class="mdc-card__subtitle">
@@ -34,26 +46,38 @@
     </div>
   </section>
   <section class="mdc-card__actions">
+    {% if mail.archived == 0 -%}
     <button name="send_reply" type="submit"
       class="mdc-ripple-surface mdc-button mdc-button--compact mdc-card__action">Reply</button>
     <button name="archive" type="submit"
       class="mdc-ripple-surface mdc-button mdc-button--compact mdc-card__action">Archive</button>
+    {% else -%}
+    <button name="unarchive" type="submit"
+      class="mdc-ripple-surface mdc-button mdc-button--compact mdc-card__action">Unarchive</button>
+    {%- endif %}
   </section>
 </form>
 {% endfor %}
 {% endblock %}
 
 {% block sidebar %}
-<form class="mdc-card" method="post" action="{{ url_for('api.mail.new') }}">
+<form class="mdc-card" method="post" action="{{ url_for('api.mail.new') }}"
+  autocomplete="off">
   <section class="mdc-card__primary">
     <h1 class="mdc-card__title mdc-card__title--large">New Mail</h1>
     <h2 class="mdc-card__subtitle"></h2>
   </section>
   <section class="mdc-card__supporting-text">
     <div class="mdc-text-field mdc-text-field--upgraded">
+      <input id="subject" class="mdc-text-field__input" name="subject"
+      type="text">
+      <label class="mdc-text-field__label" for="subject">Subject...</label>
+      <div class="mdc-text-field__bottom-line"></div>
+    </div>
+    <div class="mdc-text-field mdc-text-field--upgraded">
       <input id="users" class="mdc-text-field__input" name="users"
       type="text">
-      <label class="mdc-text-field__label" for="users">User cards would go here but FUCK</label>
+      <label class="mdc-text-field__label" for="users">User chips would go here but FUCK</label>
       <div class="mdc-text-field__bottom-line"></div>
     </div>
     <div class="mdc-text-field mdc-text-field--upgraded">
