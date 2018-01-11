@@ -23,7 +23,7 @@
           .mdc-toolbar__icon:nth-of-type(1) {
             padding-right: 12px;
           }
-          .mdc-toolbar__section--align-end:last-child {
+          .mdc-toolbar__icon:last-child {
             padding-right: 24px;
           }
         </style>
@@ -83,7 +83,7 @@
             </div>
             {%- endblock %}
             <div class="mdc-layout-grid__cell--span-4 mdc-card-container">
-              <form class="mdc-card" method="post"
+              <form class="mdc-card" method="post" autocomplete="off"
                 action="{{ url_for('api.user_management.handler') }}">
                 <section class="mdc-card__primary">
                   <h1 class="mdc-card__title mdc-card__title--large">Log In / Register</h1>
