@@ -16,7 +16,7 @@ def index():
     nations = (x["username"] for x
                in util.querySQL("SELECT username FROM users"))
     nonadmin_users = util.querySQL(
-        "SELECT uid, username FROM users WHERE admin != 1")
+        "SELECT uid, username FROM users WHERE admin != 1 AND banned != 1")
     date = arrow.get().format("YYYY-MM-DD")
     return util.render_template('ui.admin.index', "admin.html",
                                 nations=nations, date=date,

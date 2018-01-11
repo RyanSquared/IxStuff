@@ -35,6 +35,7 @@ def ban():
             (user,)))["username"]
         util.executeSQL("INSERT INTO bans (user_uid, reason) VALUES (?, ?);",
                         (user, flask.request.form["reason"]))
+        util.executeSQL("UPDATE users SET banned = 1 WHERE uid = ?", (user,))
         util.queue_message("User %r has been banned." % username)
     except StopIteration:
         util.queue_message("User not found. This should not happen. UI bug.")

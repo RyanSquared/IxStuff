@@ -86,6 +86,7 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR NOT NULL,
     password VARCHAR NOT NULL,
     admin TINYINT DEFAULT 0,
+    banned TINYINT DEFAULT 0,
     UNIQUE(username)
 );""")
 
