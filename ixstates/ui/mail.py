@@ -9,8 +9,8 @@ blueprint = flask.Blueprint('ui.mail',  # pylint: disable=invalid-name
 
 MAIL_QUERY = """SELECT * FROM mails
 LEFT JOIN users2mails ON (users2mails.mail_uid = mails.uid)
-WHERE users2mails.user_uid = ?
-"""
+WHERE users2mails.user_uid = ? AND mails.archived = ?
+ORDER BY mails.last_date DESC"""
 USERS_MAIL_QUERY = """SELECT users.username username FROM users2mails
 LEFT JOIN users ON (users.uid = users2mails.user_uid)
 WHERE mail_uid = ?"""
@@ -30,11 +30,11 @@ def map_date(entry):
     return entry
 
 
-def get_mails(uid):
+def get_mails(uid, archived=0):
     "Get unarchived mails for a user"
     if uid is None:
         return
-    for mail in util.querySQL(MAIL_QUERY, (uid,)):
+    for mail in util.querySQL(MAIL_QUERY, (uid, archived)):
         users = [x["username"]
                  for x in util.querySQL(USERS_MAIL_QUERY, (mail["uid"],))]
         messages = list(
@@ -47,5 +47,7 @@ def get_mails(uid):
 @util.requires_login
 def index():
     "Mail page."
+    archived = int(flask.request.args.get("archived", 0))
+    mails = get_mails(flask.session.get("uid"), archived)
     return util.render_template('ui.mail.index', "mail.html",
-                                mails=get_mails(flask.session.get("uid")))
+                                mails=mails, archived=archived)
