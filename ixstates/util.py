@@ -153,13 +153,15 @@ executeSQL("""
 CREATE TABLE IF NOT EXISTS mails (
     uid INTEGER PRIMARY KEY AUTOINCREMENT,
     subject VARCHAR NOT NULL,
-    archived TINYINT DEFAULT 0
+    archived TINYINT DEFAULT 0,
+    last_date INTEGER NOT NULL
 );""")
 
 executeSQL("""
 CREATE TABLE IF NOT EXISTS users2mails (
     mail_uid INTEGER NOT NULL,
-    user_uid INTEGER NOT NULL
+    user_uid INTEGER NOT NULL,
+    UNIQUE(mail_uid, user_uid)
 );""")
 
 executeSQL("""
@@ -179,7 +181,8 @@ CREATE TABLE IF NOT EXISTS bans (
 try:
     next(querySQL("SELECT * FROM mails;"))
 except StopIteration:
-    executeSQL("INSERT INTO mails (subject) VALUES ('Testing Message');")
+    executeSQL("INSERT INTO mails (subject, last_date) VALUES "
+               "('Testing Message', 1514390253);")
     executeSQL("INSERT INTO users2mails (mail_uid, user_uid) VALUES (1, 1);")
     executeSQL("INSERT INTO users2mails (mail_uid, user_uid) VALUES (1, 2);")
     executeSQL("""INSERT INTO messages2mails (mail_uid, user_uid, text, date)
