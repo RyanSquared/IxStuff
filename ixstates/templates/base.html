@@ -30,7 +30,7 @@
         <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
           <span class="mdc-toolbar__title">
             {%- block appname %}{{ config.appname }}{% endblock -%}
-            {%- if session.user %} // {{ session.user }}{% endif -%}
+            {%- if session.user %} // <span class="rainbow">{{ session.user }}</span>{% endif -%}
           </span>
         </section>
         <section class="mdc-toolbar__section mdc-toolbar__section--align-end" role="toolbar">
