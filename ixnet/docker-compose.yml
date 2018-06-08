@@ -1,0 +1,25 @@
+version: "3.2"
+
+services:
+  db:
+    image: mysql:5.7
+    # restart: always
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1
+    volumes:
+      - type: volume
+        source: mysql
+        target: /var/lib/mysql
+  db_up:
+    build:
+      context: ./mysql
+      dockerfile: up.dockerfile
+    env_file: mysql.env
+    volumes:
+      - type: bind
+        source: ./mysql # put your `up.sql` here
+        target: /data
+        read_only: true
+
+volumes:
+  mysql:

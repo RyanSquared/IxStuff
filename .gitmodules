@@ -1,0 +1,3 @@
+[submodule "ixnet/mysql/wait-for-it"]
+	path = ixnet/mysql/wait-for-it
+	url = https://github.com/vishnubob/wait-for-it
